@@ -1,7 +1,6 @@
 #############################################################
 ##NODEJS INIT Script
 #############################################################
-cat <<EOF > /etc/init.d/nodejs
 #!/bin/sh
 #
 # Note runlevel 2345, 86 is the Start order and 85 is the Stop order
@@ -42,7 +41,4 @@ echo "Usage: $0 {start|stop|restart}"
 exit 1
 ;;
 esac
-EOF
-chmod a+x /etc/init.d/nodejs
-chkconfig --add nodejs
-service nodejs start
+
