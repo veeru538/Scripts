@@ -23,3 +23,10 @@ cp sentinel.conf /etc/redis
 sed -e "s/^daemonize no$/daemonize yes/" -e "s/^# bind 127.0.0.1$/bind 0.0.0.0/" -e "s/^dir \.\//dir \/var\/lib\/redis\//" -e "s/^loglevel verbose$/loglevel notice/" -e "s/^logfile stdout$/logfile \/var\/log\/redis.log/" redis.conf > /etc/redis/redis.conf
 #######################################
 # Redis correctly installed.
+# Download redis-server init script
+#######################################
+wget -q https://github.com/veeru538/Scripts/blob/master/redis-server
+mv redis-server /etc/init.d
+chmod 755 /etc/init.d/redis-server
+chkconfig --add redis-server
+chkconfig --level 345 redis-server on
