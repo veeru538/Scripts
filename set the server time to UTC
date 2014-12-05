@@ -1,0 +1,11 @@
+# set the server time to UTC
+sudo mv /etc/localtime /etc/localtime.bak
+sudo ln -s /usr/share/zoneinfo/UTC /etc/localtime
+ 
+# sync to ntpd server time
+sudo ntpd -q
+ 
+# start ntpd after reboot
+sudo chkconfig ntpd on
+ 
+# cf: ntpd --list 
