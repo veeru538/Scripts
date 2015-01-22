@@ -1,0 +1,79 @@
+                         DREAMFACTORY (dsp-core) & V8JS INSTALLATION AND CONFIGURATION on Ubuntu
+
+
+Dreamfactory dsp-core  configuration:
+=====================================
+
+sudo apt-get install curl  php5 php5-common php5-cli php5-curl php5-json php5-mcrypt php5-gd php5-mysql mysql-server mysql-client git apache2
+mysql -u root -p
+create database dreamfactory;
+grant all privileges on dreamfactory.* to 'dsp_user'@'localhost' identified by 'dsp_user';
+mysql -u dsp_user -p 
+
+sudo mkdir -p /opt/dreamfactory/platform
+sudo chmod 777 /opt/dreamfactory/platform
+git clone https://github.com/dreamfactorysoftware/dsp-core.git /opt/dreamfactory/platform
+cd /opt/dreamfactory/platform
+sudo ./scripts/installer.sh –cv
+sudo nano /etc/apache2/sites-available/000-default.conf 
+sudo cp /etc/apache2/sites-available/000-default.conf  /etc/apache2/sites-available/dreamfactory.conf
+sudo nano /etc/apache2/sites-available/dreamfactory.conf 
+vi /etc/apache2/sites-available/dreamfactory.conf 
+apachectl -t
+a2ensite dreamfactory.conf 
+service apache2 reload
+sudo a2enmod rewrite
+sudo chmod 775 /opt/dreamfactory/platform/web/assets/
+sudo php5enmod mcrypt
+sudo service apache2 restart
+
+cat /etc/apache2/sites-available/dreamfactory.conf 
+<VirtualHost *:80>
+	ServerName your.server.com
+	ServerAdmin webmaster@localhost
+	DocumentRoot /opt/dreamfactory/platform/web
+        <Directory />
+        Options FollowSymLinks
+        AllowOverride All
+        </Directory>
+        <Directory /opt/dreamfactory/platform/web/>
+           Options Indexes FollowSymLinks MultiViews
+           AllowOverride All 
+#          Order allow,deny
+#          allow from all
+           Require all granted
+        </Directory>
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+
+
+
+
+V8js:
+=====
+cd /opt 
+git clone https://github.com/v8/v8
+cd v8/
+git checkout tags/3.15.4
+make dependencies
+apt-get install subversion
+make dependencies
+apt-get install php-pear
+apt-get install php5-dev
+apt-get install libv8-dev libv8-dbg g++ cpp
+apt-get install libv8-dev g++ cpp
+sudo pecl install v8js-0.1.3
+echo "extension=v8js.so" | sudo tee /etc/php5/mods-available/v8js.ini
+sudo php5enmod v8js
+sudo service apache2 restart
+php -i | grep v8js
+
+
+
+
+
+References: 
+https://github.com/dreamfactorysoftware/dsp-core/wiki/Install-Debian-Ubuntu
+https://github.com/dreamfactorysoftware/dsp-core/wiki/Installing-V8js
